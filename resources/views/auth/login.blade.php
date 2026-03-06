@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Barangay Management System - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+    <style>
+        :root {
+            --blue:       #1a6ec7;
+            --blue-dark:  #154f96;
+            --sky:        #d9f2fc;
+            --sky-mid:    #a8dff5;
+            --green:      #3a7d44;
+            --green-dark: #2c5f35;
+            --white:      #ffffff;
+            --off-white:  #f4f8fb;
+            --text:       #1a2433;
+            --text-light: #4b5e72;
+            --border:     rgba(26,110,199,0.12);
+            --gold:       #e8b84b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'DM Sans', sans-serif;
+            display: flex;
+            flex-wrap: wrap;
+            min-height: 100vh;
+            color: var(--text);
+        }
+
+        .left-panel {
+            width: 42%;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 45%, #1a8fc7 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 48px;
+            color: white;
+        }
+
+        .shield-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin-bottom: 24px;
+        }
+
+        .left-panel h1 {
+            font-size: 42px;
+            font-weight: 800;
+            margin: 0;
+            margin-bottom: 8px;
+        }
+
+        .left-panel > p {
+            font-size: 18px;
+            margin: 8px 0 40px 0;
+            opacity: 0.8;
+        }
+
+        .divider {
+            width: 3px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            margin-bottom: 32px;
+        }
+
+        .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .feature-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            line-height: 32px;
+            flex-shrink: 0;
+        }
+
+        .feature-text {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .left-panel-footer {
+            font-size: 13px;
+            opacity: 0.6;
+        }
+
+        .right-panel {
+            width: 58%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--surface);
+            padding: 40px;
+        }
+
+        .login-card {
+            max-width: 420px;
+            width: 100%;
+            background: white;
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow: 0 8px 40px rgba(26, 111, 204, 0.12);
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--blue-light);
+            color: var(--blue);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .card-header h2 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text);
+            margin: 0;
+            margin-bottom: 8px;
+        }
+
+        .card-header p {
+            color: var(--text-muted);
+            font-size: 15px;
+            margin: 8px 0 0 0;
+        }
+
+        .alert {
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .alert-error {
+            background: #fce8e6;
+            border-left: 4px solid #dc3545;
+            color: #b91c1c;
+        }
+
+        .alert-success {
+            background: var(--green-light);
+            border-left: 4px solid var(--green);
+            color: var(--green-dark);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: inherit;
+            color: var(--text);
+            background: white;
+            box-sizing: border-box;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 4px rgba(26, 111, 204, 0.1);
+        }
+
+        .form-group input.error {
+            border-color: #dc3545;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        .divider-or {
+            text-align: center;
+            margin: 24px 0;
+            position: relative;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .divider-or::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--border);
+            z-index: 0;
+        }
+
+        .divider-or span {
+            position: relative;
+            background: white;
+            padding: 0 8px;
+            z-index: 1;
+        }
+
+        .register-link {
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .register-link a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+            transition: opacity 0.2s;
+        }
+
+        .register-link a:hover {
+            opacity: 0.8;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #1a6ec7, #3a7d44);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.92;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.99);
+        }
+    </style>
+</head>
+<body>
+    <div class="left-panel">
+        <div class="shield-icon">🛡️</div>
+        <h1>Barangay</h1>
+        <p>Management System</p>
+        <div class="divider"></div>
+        
+        <div class="feature-list">
+            <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <div class="feature-text">Secure Resident Portal</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <div class="feature-text">Official ID Generation</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <div class="feature-text">Real-time Notifications</div>
+            </div>
+        </div>
+
+        <div class="left-panel-footer">Serving the community with transparency</div>
+    </div>
+
+    <div class="right-panel">
+        <div class="login-card">
+            <div class="card-header">
+                <span class="badge">Resident Portal</span>
+                <h2>Welcome Back</h2>
+                <p>Sign in to your account</p>
+            </div>
+
+            @if(session('error'))
+                <div class="alert alert-error">
+                    <span>⚠️</span>
+                    <span>{{ session('error') }}</span>
+                </div>
+            @endif
+
+            @if(session('success'))
+                <div class="alert alert-success">
+                    <span>✓</span>
+                    <span>{{ session('success') }}</span>
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('login') }}">
+                @csrf
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        value="{{ old('email') }}"
+                        placeholder="resident@barangay.local"
+                        required
+                        class="@error('email') error @enderror"
+                    >
+                    @error('email')
+                        <div class="error-message">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password"
+                        placeholder="••••••••••••"
+                        required
+                        class="@error('password') error @enderror"
+                    >
+                    @error('password')
+                        <div class="error-message">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-footer">
+                    <label>
+                        <input type="checkbox" name="remember">
+                        <span style="font-size: 13px; color: var(--text-muted); margin-left: 4px;">Remember me</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-primary">Sign In</button>
+            </form>
+
+            <div class="divider-or">
+                <span>or</span>
+            </div>
+
+            <div class="register-link">
+                Don't have an account? <a href="{{ route('register') }}">Register here →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer style="background: linear-gradient(135deg, #0d1b2a 0%, #0a0f18 100%); color: rgba(255,255,255,0.75); padding: 48px 28px 24px; width: 100%;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 36px;">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px; text-decoration: none;">
+                        <img src="{{ file_exists(public_path('images/city_of_general_trias_seal.png')) ? asset('images/city_of_general_trias_seal.png') : asset('images/city_of_general_trias.png') }}" alt="Logo" style="width: 36px; height: 36px; filter: brightness(0) invert(1) drop-shadow(0 2px 4px rgba(0,0,0,0.3));"/>
+                        <div style="line-height: 1.2;">
+                            <strong style="display: block; font-family: 'Plus Jakarta Sans', serif; font-size: 14px; color: white; letter-spacing: 0.01em;">Barangay Management System</strong>
+                            <span style="font-size: 11px; color: rgba(255,255,255,0.5); font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase;">City of General Trias</span>
+                        </div>
+                    </div>
+                    <p style="font-size: 13px; line-height: 1.7; max-width: 220px;">Empowering communities through technology-driven governance and transparent service delivery.</p>
+                </div>
+                <div>
+                    <h4 style="font-size: 13px; font-weight: 700; color: white; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 16px;">Services</h4>
+                    <a href="#" style="display: block; font-size: 13px; color: rgba(255,255,255,.6); text-decoration: none; margin-bottom: 10px; transition: color .2s;">Barangay Clearance</a>
+                    <a href="#" style="display: block; font-size: 13px; color: rgba(255,255,255,.6); text-decoration: none; margin-bottom: 10px; transition: color .2s;">Residency Certificate</a>
+                    <a href="#" style="display: block; font-size: 13px; color: rgba(255,255,255,.6); text-decoration: none; margin-bottom: 10px; transition: color .2s;">Business Permits</a>
+                    <a href="#" style="display: block; font-size: 13px; color: rgba(255,255,255,.6); text-decoration: none; margin-bottom: 10px; transition: color .2s;">Indigency Certificate</a>
+                </div>
+                <div>
+                    <h4 style="font-size: 13px; font-weight: 700; color: white; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 16px;">Resources</h4>
+                    <a href="#" style="display: block; font-size: 13px; color: rgba(255,255,255,.6); text-decoration: none; margin-bottom: 10px; transition: color .2s;">FAQs</a>
+                    <a href="#" style="display: block; font-size: 13px; color: rgba(255,255,255,.6); text-decoration: none; margin-bottom: 10px; transition: color .2s;">Privacy Policy</a>
+                    <a href="#" style="display: block; font-size: 13px; color: rgba(255,255,255,.6); text-decoration: none; margin-bottom: 10px; transition: color .2s;">Terms of Use</a>
+                    <a href="#" style="display: block; font-size: 13px; color: rgba(255,255,255,.6); text-decoration: none; margin-bottom: 10px; transition: color .2s;">Support</a>
+                </div>
+                <div>
+                    <h4 style="font-size: 13px; font-weight: 700; color: white; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 16px;">Government</h4>
+                    <a href="#" style="display: block; font-size: 13px; color: rgba(255,255,255,.6); text-decoration: none; margin-bottom: 10px; transition: color .2s;">City Hall</a>
+                    <a href="#" style="display: block; font-size: 13px; color: rgba(255,255,255,.6); text-decoration: none; margin-bottom: 10px; transition: color .2s;">City Council</a>
+                    <a href="#" style="display: block; font-size: 13px; color: rgba(255,255,255,.6); text-decoration: none; margin-bottom: 10px; transition: color .2s;">Barangay Officials</a>
+                    <a href="#" style="display: block; font-size: 13px; color: rgba(255,255,255,.6); text-decoration: none; margin-bottom: 10px; transition: color .2s;">DRRMO</a>
+                </div>
+            </div>
+            <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                <p style="font-size: 12px; color: rgba(255,255,255,0.4); margin: 0;">© 2026 City Government of General Trias, Cavite. All rights reserved.</p>
+                <p style="font-size: 12px; color: rgba(255,255,255,0.4); margin: 0;">Powered by the Barangay Management System</p>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        body { 
+            min-height: 100vh; 
+            display: flex; 
+            flex-wrap: wrap;
+            padding: 0;
+            margin: 0;
+        }
+        .left-panel {
+            width: 42%;
+            min-height: 100vh;
+        }
+        .right-panel { 
+            width: 58%;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            min-height: 100vh;
+        }
+        footer {
+            width: 100%;
+            flex-basis: 100%;
+        }
+    </style>
+</body>
+</html>

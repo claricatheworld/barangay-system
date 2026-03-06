@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Official Government System – Barangay Management System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --blue:       #1a6ec7;
+      --blue-dark:  #154f96;
+      --sky:        #d9f2fc;
+      --sky-mid:    #a8dff5;
+      --green:      #3a7d44;
+      --green-dark: #2c5f35;
+      --white:      #ffffff;
+      --off-white:  #f4f8fb;
+      --text:       #1a2433;
+      --text-light: #4b5e72;
+      --border:     rgba(26,110,199,0.12);
+      --gold:       #e8b84b;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text);
+      background: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ──────────────────────────────── */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 20px rgba(26,110,199,0.08);
+    }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 28px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .logo-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .logo-group img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      mix-blend-mode: multiply;
+      filter: drop-shadow(0 1px 3px rgba(0,0,0,0.15));
+    }
+    .logo-text { line-height: 1.2; }
+    .logo-text strong {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      color: var(--blue-dark);
+      letter-spacing: 0.01em;
+    }
+    .logo-text span {
+      font-size: 0.72rem;
+      color: var(--green);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    nav { display: flex; align-items: center; gap: 6px; }
+    nav a {
+      padding: 8px 14px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-light);
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all .2s;
+    }
+    nav a:hover { color: var(--blue); background: var(--sky); }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      background: var(--blue);
+      color: var(--white);
+      border: none;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all .25s;
+      box-shadow: 0 3px 14px rgba(26,110,199,0.3);
+    }
+    .btn-primary:hover { background: var(--blue-dark); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(26,110,199,0.38); }
+
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; }
+    .hamburger span { width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: .3s; }
+
+    /* ── HERO ────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 45%, #1a8fc7 100%);
+      padding-top: 72px;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -120px; right: -120px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(255,255,255,0.07) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: 30%;
+      width: 900px; height: 400px;
+      background: rgba(58,125,68,0.18);
+      border-radius: 60% 60% 0 0;
+      transform: rotate(-8deg);
+    }
+
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 28px 100px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 60px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--sky);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .hero-badge::before { content: '●'; color: #7ef5a0; font-size: 0.6rem; }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 4vw, 3.4rem);
+      color: var(--white);
+      line-height: 1.18;
+      margin-bottom: 20px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--gold);
+    }
+
+    .hero p {
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.82);
+      line-height: 1.7;
+      max-width: 480px;
+      margin-bottom: 36px;
+    }
+
+    .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+
+    .btn-outline-white {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border: 2px solid rgba(255,255,255,0.5);
+      color: var(--white);
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all .25s;
+    }
+    .btn-outline-white:hover { background: rgba(255,255,255,0.12); border-color: var(--white); }
+
+    .hero-stats {
+      display: flex;
+      gap: 36px;
+      margin-top: 48px;
+      padding-top: 36px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+    .stat-item {}
+    .stat-item .num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1;
+    }
+    .stat-item .label {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.7);
+      font-weight: 500;
+      margin-top: 4px;
+      letter-spacing: 0.03em;
+    }
+
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+    .seal-ring {
+      width: 340px;
+      height: 340px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      border: 2px solid rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      animation: pulse-ring 3s ease-in-out infinite;
+    }
+    .seal-ring::before {
+      content: '';
+      position: absolute;
+      inset: -18px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.1);
+      animation: pulse-ring 3s ease-in-out infinite .5s;
+    }
+    .seal-ring::after {
+      content: '';
+      position: absolute;
+      inset: -36px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.06);
+      animation: pulse-ring 3s ease-in-out infinite 1s;
+    }
+    @keyframes pulse-ring {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.7; transform: scale(1.03); }
+    }
+    .seal-ring img {
+      width: 240px;
+      height: 240px;
+      object-fit: contain;
+      mix-blend-mode: normal;
+      filter: drop-shadow(0 8px 32px rgba(0,0,0,0.25));
+    }
+
+    /* ── ABOUT ───────────────────────────────── */
+    .about {
+      padding: 100px 28px;
+      background: var(--white);
+    }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--green);
+      background: rgba(58,125,68,0.1);
+      padding: 5px 14px;
+      border-radius: 100px;
+      margin-bottom: 18px;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      color: var(--text);
+      line-height: 1.25;
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 1rem;
+      color: var(--text-light);
+      line-height: 1.7;
+      max-width: 560px;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+      margin-top: 60px;
+    }
+    .about-text p {
+      font-size: 0.95rem;
+      color: var(--text-light);
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+    .about-values {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 32px;
+    }
+    .value-card {
+      background: var(--off-white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      transition: .25s;
+    }
+    .value-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(26,110,199,0.1); }
+    .value-card .icon { font-size: 1.5rem; margin-bottom: 10px; }
+    .value-card h4 { font-size: 0.9rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .value-card p { font-size: 0.8rem; color: var(--text-light); line-height: 1.5; }
+
+    .about-image {
+      border-radius: 24px;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--sky) 0%, var(--sky-mid) 100%);
+      aspect-ratio: 4/3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(26,110,199,0.18);
+    }
+    .about-image-content {
+      text-align: center;
+      padding: 40px;
+    }
+    .about-image img {
+      width: 160px;
+      height: 160px;
+      object-fit: contain;
+      mix-blend-mode: multiply;
+      filter: drop-shadow(0 4px 20px rgba(26,110,199,0.2));
+      margin-bottom: 20px;
+    }
+    .about-image p {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--blue-dark);
+      font-weight: 600;
+    }
+    .about-image span {
+      font-size: 0.8rem;
+      color: var(--green);
+      font-weight: 500;
+    }
+    .floating-badge {
+      position: absolute;
+      bottom: 24px; right: 24px;
+      background: var(--white);
+      border-radius: 12px;
+      padding: 12px 18px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .floating-badge .dot { width: 10px; height: 10px; background: #22c55e; border-radius: 50%; flex-shrink: 0; animation: blink 1.5s ease-in-out infinite; }
+    @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:.3; } }
+    .floating-badge span { font-size: 0.78rem; font-weight: 600; color: var(--text); }
+
+    /* ── SERVICES ────────────────────────────── */
+    .services {
+      padding: 100px 28px;
+      background: var(--off-white);
+    }
+    .services-header { text-align: center; margin-bottom: 60px; }
+    .services-header .section-sub { margin: 0 auto; }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .service-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px 28px;
+      transition: all .3s cubic-bezier(.34,1.56,.64,1);
+      position: relative;
+      overflow: hidden;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--blue), var(--green));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .3s;
+    }
+    .service-card:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(26,110,199,0.15); }
+    .service-card:hover::before { transform: scaleX(1); }
+
+    .service-icon {
+      width: 54px; height: 54px;
+      border-radius: 14px;
+      background: var(--sky);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+      transition: .3s;
+    }
+    .service-card:hover .service-icon { background: var(--blue); }
+
+    .service-card h3 { font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 10px; }
+    .service-card p { font-size: 0.85rem; color: var(--text-light); line-height: 1.65; margin-bottom: 20px; }
+    .service-link {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--blue);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: gap .2s;
+    }
+    .service-link:hover { gap: 10px; }
+
+    /* ── ANNOUNCEMENTS ───────────────────────── */
+    .announcements {
+      padding: 100px 28px;
+      background: var(--white);
+    }
+    .ann-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 60px;
+      margin-top: 60px;
+      align-items: start;
+    }
+
+    .ann-list { display: flex; flex-direction: column; gap: 20px; }
+    .ann-card {
+      display: flex;
+      gap: 20px;
+      padding: 24px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      transition: .25s;
+      cursor: pointer;
+    }
+    .ann-card:hover { background: var(--off-white); transform: translateX(4px); }
+    .ann-date {
+      flex-shrink: 0;
+      width: 56px;
+      text-align: center;
+      background: var(--blue);
+      color: var(--white);
+      border-radius: 12px;
+      padding: 10px 8px;
+      line-height: 1.1;
+    }
+    .ann-date .day { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; }
+    .ann-date .month { font-size: 0.65rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; opacity: .85; }
+    .ann-body {}
+    .ann-tag {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 100px;
+      margin-bottom: 8px;
+    }
+    .ann-tag.health { background: rgba(34,197,94,0.12); color: #16a34a; }
+    .ann-tag.civil  { background: rgba(26,110,199,0.12); color: var(--blue); }
+    .ann-tag.event  { background: rgba(232,184,75,0.18); color: #b45309; }
+    .ann-tag.alert  { background: rgba(239,68,68,0.12); color: #dc2626; }
+    .ann-body h4 { font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .ann-body p { font-size: 0.82rem; color: var(--text-light); line-height: 1.55; }
+
+    /* Quick links panel */
+    .quick-panel {
+      background: linear-gradient(160deg, var(--blue-dark) 0%, var(--blue) 100%);
+      border-radius: 24px;
+      padding: 32px 28px;
+      color: var(--white);
+      position: sticky;
+      top: 92px;
+    }
+    .quick-panel h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 6px; }
+    .quick-panel > p { font-size: 0.82rem; color: rgba(255,255,255,.7); margin-bottom: 24px; }
+    .quick-links { display: flex; flex-direction: column; gap: 10px; }
+    .quick-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--white);
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: .2s;
+    }
+    .quick-link:hover { background: rgba(255,255,255,0.18); transform: translateX(4px); }
+    .quick-link .ql-icon { font-size: 1.1rem; flex-shrink: 0; }
+    .quick-link .ql-arrow { margin-left: auto; opacity: .6; font-size: 0.8rem; }
+
+    /* ── CONTACT ─────────────────────────────── */
+    .contact {
+      padding: 100px 28px;
+      background: var(--off-white);
+    }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+      margin-top: 60px;
+    }
+    .contact-info {}
+    .contact-info p { font-size: 0.95rem; color: var(--text-light); line-height: 1.75; margin-bottom: 32px; }
+    .contact-items { display: flex; flex-direction: column; gap: 20px; }
+    .contact-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .ci-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: var(--sky);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .ci-text h4 { font-size: 0.85rem; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+    .ci-text p { font-size: 0.82rem; color: var(--text-light); line-height: 1.5; }
+
+    /* Contact form */
+    .contact-form {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 36px 32px;
+    }
+    .contact-form h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--text); margin-bottom: 24px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+    .form-group label { font-size: 0.8rem; font-weight: 600; color: var(--text); }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      color: var(--text);
+      background: var(--off-white);
+      outline: none;
+      transition: border-color .2s;
+      resize: none;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: var(--blue); background: var(--white); }
+    .form-group textarea { height: 110px; }
+
+    /* ── FOOTER ──────────────────────────────── */
+    footer {
+      background: linear-gradient(135deg, var(--text) 0%, #0f1820 100%);
+      color: rgba(255,255,255,0.75);
+      padding: 60px 28px 32px;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+    .footer-brand .logo-group { margin-bottom: 16px; }
+    .footer-brand .logo-group img { mix-blend-mode: normal; filter: brightness(0) invert(1) drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+    .footer-brand .logo-group strong { color: var(--white); }
+    .footer-brand .logo-group span { color: rgba(255,255,255,0.5); }
+    .footer-brand p { font-size: 0.82rem; line-height: 1.7; max-width: 280px; }
+    .footer-col h4 { font-size: 0.82rem; font-weight: 700; color: var(--white); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 16px; }
+    .footer-col a { display: block; font-size: 0.82rem; color: rgba(255,255,255,.6); text-decoration: none; margin-bottom: 10px; transition: color .2s; }
+    .footer-col a:hover { color: var(--sky-mid); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-bottom p { font-size: 0.78rem; color: rgba(255,255,255,0.4); }
+
+    /* ── RESPONSIVE ──────────────────────────── */
+    @media (max-width: 1024px) {
+      .services-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      nav { display: none; }
+      .hamburger { display: flex; }
+      .hero-inner { grid-template-columns: 1fr; text-align: center; }
+      .hero-visual { order: -1; }
+      .seal-ring { width: 240px; height: 240px; }
+      .seal-ring img { width: 170px; height: 170px; }
+      .hero-ctas { justify-content: center; }
+      .hero-stats { justify-content: center; }
+      .about-grid { grid-template-columns: 1fr; }
+      .services-grid { grid-template-columns: 1fr; }
+      .ann-layout { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-stats { flex-direction: column; gap: 20px; }
+      .about-values { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; }
+    }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ HEADER ══════════════════════════════════════════════ -->
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo-group">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%231a6ec7'/%3E%3Ctext x='50' y='55' text-anchor='middle' font-size='24' fill='white' font-weight='bold'%3EBMS%3C/text%3E%3C/svg%3E" alt="Logo"/>
+      <div class="logo-text">
+        <strong>BMS System</strong>
+        <span>Barangay Management</span>
+      </div>
+    </a>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#announcements">News</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div style="display: flex; gap: 8px;">
+      <a href="{{ route('login') }}" class="btn-primary">🔐 Login</a>
+    </div>
+    <div class="hamburger" onclick="this.classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</header>
+
+<!-- ══ HERO ════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge">Official Government System &nbsp;· &nbsp; 2026</div>
+      <h1>Serving the Community of <em>General Trias</em> with Excellence</h1>
+      <p>A modern and transparent barangay management platform providing efficient public services, real-time updates, and seamless access to government documents for every resident.</p>
+      <div class="hero-ctas">
+        <a href="#services" class="btn-primary">🗂 Explore Services</a>
+        <a href="#contact" class="btn-outline-white">📞 Contact Us</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="num">145+</div>
+          <div class="label">Barangays Served</div>
+        </div>
+        <div class="stat-item">
+          <div class="num">400K</div>
+          <div class="label">Residents</div>
+        </div>
+        <div class="stat-item">
+          <div class="num">24/7</div>
+          <div class="label">Online Access</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="seal-ring">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='none' stroke='white' stroke-width='2'/%3E%3Ctext x='50' y='55' text-anchor='middle' font-size='24' fill='white' font-weight='bold'%3E🏛️%3C/text%3E%3C/svg%3E" alt="Seal"/>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ABOUT ═══════════════════════════════════════════════ -->
+<section class="about" id="about">
+  <div class="section-inner">
+    <span class="section-tag">Who We Are</span>
+    <h2 class="section-title">About Barangay Management System</h2>
+    <p class="section-sub">Empowering communities through transparent governance and digital accessibility.</p>
+
+    <div class="about-grid">
+      <div class="about-text">
+        <p>The Barangay Management System (BMS) is a modern government portal designed to streamline administrative processes and bring government services closer to every resident. Our mission is to make public services more accessible, transparent, and efficient.</p>
+        <p>With an integrated digital infrastructure, we enable residents to access vital services, track documents, and communicate with officials seamlessly—anytime, anywhere.</p>
+        <div class="about-values">
+          <div class="value-card">
+            <div class="icon">🎯</div>
+            <h4>Mission</h4>
+            <p>Deliver outstanding public services through technology and innovation</p>
+          </div>
+          <div class="value-card">
+            <div class="icon">👁️</div>
+            <h4>Vision</h4>
+            <p>A connected community with transparent and responsive governance</p>
+          </div>
+          <div class="value-card">
+            <div class="icon">📢</div>
+            <h4>Communication</h4>
+            <p>Open channels between residents and government officials</p>
+          </div>
+          <div class="value-card">
+            <div class="icon">⚡</div>
+            <h4>Excellence</h4>
+            <p>Continuous improvement in service delivery and efficiency</p>
+          </div>
+        </div>
+      </div>
+      <div class="about-image">
+        <div class="about-image-content">
+          <p>🏛️</p>
+          <p>City Hall</p>
+          <span>General Trias</span>
+        </div>
+        <div class="floating-badge">
+          <div class="dot"></div>
+          <span>System Online</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SERVICES ════════════════════════════════════════════ -->
+<section class="services" id="services">
+  <div class="section-inner">
+    <div class="services-header">
+      <span class="section-tag">Our Services</span>
+      <h2 class="section-title">What We Offer</h2>
+      <p class="section-sub">Comprehensive digital services tailored to meet the needs of our community</p>
+    </div>
+
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">📋</div>
+        <h3>Document Services</h3>
+        <p>Request and track important documents such as barangay clearance, residency, and business permits online.</p>
+        <a href="{{ route('login') }}" class="service-link">Get Started › </a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🗳️</div>
+        <h3>Government Programs</h3>
+        <p>Explore and apply for various government programs and benefits available to residents.</p>
+        <a href="{{ route('login') }}" class="service-link">Learn More › </a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">💬</div>
+        <h3>Online Assistance</h3>
+        <p>Connect with government officials through our chat system for inquiries and assistance.</p>
+        <a href="{{ route('login') }}" class="service-link">Contact Us › </a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">📱</div>
+        <h3>Online ID Services</h3>
+        <p>Generate and manage your online ID for quick verification and access to services.</p>
+        <a href="{{ route('login') }}" class="service-link">Apply Now › </a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">📢</div>
+        <h3>Announcements</h3>
+        <p>Stay updated with latest news, advisories, and community announcements.</p>
+        <a href="#announcements" class="service-link">View News › </a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🔔</div>
+        <h3>Notifications</h3>
+        <p>Receive real-time notifications about important updates and events.</p>
+        <a href="{{ route('login') }}" class="service-link">Enable Alerts › </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ANNOUNCEMENTS ═══════════════════════════════════════ -->
+<section class="announcements" id="announcements">
+  <div class="section-inner">
+    <span class="section-tag">Latest Updates</span>
+    <h2 class="section-title">News & Announcements</h2>
+    <p class="section-sub">Stay informed about important community events and government updates</p>
+
+    <div class="ann-layout">
+      <div class="ann-list">
+        <div class="ann-card">
+          <div class="ann-date"><div class="day">10</div><div class="month">Mar</div></div>
+          <div class="ann-body">
+            <span class="ann-tag health">Health</span>
+            <h4>Free Medical Mission – Barangay Buenavista</h4>
+            <p>The City Health Office will conduct a free medical mission offering consultation, blood pressure monitoring, and medicine distribution for all residents.</p>
+          </div>
+        </div>
+        <div class="ann-card">
+          <div class="ann-date"><div class="day">22</div><div class="month">Mar</div></div>
+          <div class="ann-body">
+            <span class="ann-tag civil">Civil</span>
+            <h4>BMS Online Portal Maintenance Notice</h4>
+            <p>Scheduled system maintenance from 10PM–2AM on March 22. Online document requests may be temporarily unavailable during this period.</p>
+          </div>
+        </div>
+        <div class="ann-card">
+          <div class="ann-date"><div class="day">28</div><div class="month">Mar</div></div>
+          <div class="ann-body">
+            <span class="ann-tag event">Event</span>
+            <h4>Barangay Assembly – 1st Quarter 2026</h4>
+            <p>All registered residents are invited to attend the 1st Quarter Barangay Assembly. Agenda includes budget presentation and community projects update.</p>
+          </div>
+        </div>
+        <div class="ann-card">
+          <div class="ann-date"><div class="day">05</div><div class="month">Apr</div></div>
+          <div class="ann-body">
+            <span class="ann-tag alert">Advisory</span>
+            <h4>Flood Preparedness Advisory – Rainy Season 2026</h4>
+            <p>DRRMO General Trias urges all residents to prepare emergency kits and identify nearest evacuation centers ahead of the rainy season.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="quick-panel">
+        <h3>Quick Links</h3>
+        <p>Frequently accessed portals</p>
+        <div class="quick-links">
+          <a href="{{ route('login') }}" class="quick-link"><span class="ql-icon">🖥️</span> Resident Portal <span class="ql-arrow">›</span></a>
+          <a href="{{ route('login') }}" class="quick-link"><span class="ql-icon">📋</span> Track Documents <span class="ql-arrow">›</span></a>
+          <a href="#contact" class="quick-link"><span class="ql-icon">🗺️</span> Contact Info <span class="ql-arrow">›</span></a>
+          <a href="{{ route('login') }}" class="quick-link"><span class="ql-icon">📞</span> Help & Support <span class="ql-arrow">›</span></a>
+          <a href="{{ route('login') }}" class="quick-link"><span class="ql-icon">💬</span> Chat with Officials <span class="ql-arrow">›</span></a>
+          <a href="{{ route('login') }}" class="quick-link"><span class="ql-icon">📰</span> Latest News <span class="ql-arrow">›</span></a>
+          <a href="{{ route('register') }}" class="quick-link"><span class="ql-icon">✍️</span> Register Now <span class="ql-arrow">›</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACT ══════════════════════════════════════════════ -->
+<section class="contact" id="contact">
+  <div class="section-inner">
+    <span class="section-tag">Get in Touch</span>
+    <h2 class="section-title">Contact Us</h2>
+    <p class="section-sub">Reach out to your barangay officials. We're here to help and listen to your concerns.</p>
+
+    <div class="contact-grid">
+      <div class="contact-info">
+        <p>Our offices are open Monday through Friday. For urgent matters, please use the emergency hotlines or visit your nearest barangay hall during office hours.</p>
+        <div class="contact-items">
+          <div class="contact-item">
+            <div class="ci-icon">📍</div>
+            <div class="ci-text">
+              <h4>City Hall Address</h4>
+              <p>Gen. Trias Drive, General Trias City, Cavite 4116, Philippines</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="ci-icon">📞</div>
+            <div class="ci-text">
+              <h4>Office Hotline</h4>
+              <p>(046) 437-0000 · (046) 437-0001</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="ci-icon">✉️</div>
+            <div class="ci-text">
+              <h4>Email Address</h4>
+              <p>bms@generaltrias.gov.ph</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="ci-icon">🕐</div>
+            <div class="ci-text">
+              <h4>Office Hours</h4>
+              <p>Monday – Friday: 8:00 AM – 5:00 PM<br/>Closed on weekends and holidays</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-form">
+        <h3>Send a Message</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" placeholder="Juan"/>
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" placeholder="Dela Cruz"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" placeholder="juan@email.com"/>
+        </div>
+        <div class="form-group">
+          <label>Concern Type</label>
+          <select>
+            <option>Select a concern</option>
+            <option>Document Request</option>
+            <option>Complaint / Blotter</option>
+            <option>Program Inquiry</option>
+            <option>General Feedback</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea placeholder="Describe your concern or inquiry..."></textarea>
+        </div>
+        <button class="btn-primary" style="width:100%; justify-content:center;">📨 Submit Message</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ═══════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="/" class="logo-group">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%231a6ec7'/%3E%3Ctext x='50' y='55' text-anchor='middle' font-size='24' fill='white' font-weight='bold'%3EBMS%3C/text%3E%3C/svg%3E" alt="Logo"/>
+          <div class="logo-text">
+            <strong>BMS System</strong>
+            <span>Barangay Management</span>
+          </div>
+        </a>
+        <p>Providing transparent, efficient, and accessible government services to every resident of General Trias City.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <a href="#services">Document Services</a>
+        <a href="#services">Government Programs</a>
+        <a href="#services">Online Assistance</a>
+        <a href="#services">Online ID</a>
+      </div>
+      <div class="footer-col">
+        <h4>Government</h4>
+        <a href="#contact">City Hall</a>
+        <a href="#contact">Barangay Officials</a>
+        <a href="#contact">Contact Us</a>
+        <a href="#announcements">News & Updates</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="#">FAQs</a>
+        <a href="#">Data Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Help & Support</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 City Government of General Trias, Cavite. All rights reserved.</p>
+      <p>Powered by the Barangay Management System</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Intersection Observer for fade-up animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 100);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Smooth active nav highlighting
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a[href^="#"]');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 100) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current ? 'var(--blue)' : '';
+    });
+  });
+</script>
+</body>
+</html>
