@@ -1,11 +1,15 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>PROJECT CONNECT - Brgy. San Juan I</title>
+  <link href="{{ asset('css/app.css') }}" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-    <link rel="icon" type="image/x-icon" href="{{ asset('images/city_of_general_trias_seal.png') }}">
+  <link rel="icon" type="image/x-icon" href="{{ asset('images/city_of_general_trias_seal.png') }}">
+  
+    
   <style>
     :root {
       --blue:       #1a6ec7;
@@ -32,22 +36,27 @@
       background: var(--soft-blue);
       overflow-x: hidden;
       line-height: 1.6;
+  
     }
+
 
     /* ══════════════════════════════════════════════════════════════════
        MODAL - DATA PRIVACY NOTICE
     ══════════════════════════════════════════════════════════════════ */
     .floatingPopup {
+      width: 400px;
       position: fixed;
       top: 50%;
       left: 50%;
       font-family: 'DM Sans', sans-serif;
       transform: translate(-50%, -50%);
       background: white;
+      backdrop-filter: blur(100px);    
       padding: 25px;
       box-shadow: 0 5px 20px rgba(0,0,0,0.3);
       border-radius: 10px;
       z-index: 9999;
+      
     }
     /* ══════════════════════════════════════════════════════════════════
        HEADER
@@ -67,14 +76,6 @@
       box-shadow: 0 2px 20px rgba(26,110,199,0.08);
     }
 
-    .top-banner {
-      background: linear-gradient(90deg, var(--blue-dark), var(--blue));
-      color: white;
-      text-align: center;
-      padding: 8px 20px;
-      font-size: 0.875rem;
-      font-weight: 500;
-    }
 
     .header-inner {
       max-width: 1200px;
@@ -413,7 +414,7 @@
       width: 50%;
       border: 1px solid var(--soft-blue); 
       background: var(--soft-blue);
-      color: var(--green);
+      color: var(--blue-dark);
 
     }
     a {
@@ -910,6 +911,18 @@
        RESPONSIVE
     ══════════════════════════════════════════════════════════════════ */
     @media (max-width: 768px) {
+
+      .floatingPopup {
+      width: 300px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      padding: 25px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+      border-radius: 10px;
+      z-index: 9999;
+      
+    }
       .header-inner {
         padding: 0 20px;
       }
@@ -970,6 +983,20 @@
 </head>
 <body>
 
+  <!-- ══════════════════════════════════════════════════════════════════
+       MODAL - DATA PRIVACY NOTICE
+  ══════════════════════════════════════════════════════════════════ -->
+    <div id="floatingPopup" class="floatingPopup">
+      <h4>Data Privacy Consent Form</h4> <br>
+      <p>
+        I hereby give my consent and acknowledge the authority of Barangay San Juan I to process my personal
+        information in accordance with the Data Privacy Act of 2012.
+      </p> <br>
+      <button class="btn btn-primary" onclick="closePopup()" style="float:right;">OK</button>
+    </div>
+    </div>
+
+
 
 
   <!-- ══════════════════════════════════════════════════════════════════
@@ -977,10 +1004,10 @@
   ══════════════════════════════════════════════════════════════════ -->
 
   <header>
-    
+
     <div class="header-inner">
       <a href="/" class="logo-group">
-        <img src="{{ asset('images/city_of_general_trias_seal.png') }}" alt="General Trias Seal" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2248%22 height=%2248%22%3E%3Ccircle cx=%2224%22 cy=%2224%22 r=%2220%22 fill=%22%231a6ec7%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22white%22 font-size=%2216%22 font-weight=%22bold%22%3EGT%3C/text%3E%3C/svg%3E'"/>
+        <img src="{{ asset('images/city_of_general_trias_seal.png') }}" alt="General Trias Seal" />
         <div class="logo-text">
           <strong>PROJECT CONNECT</strong>
           
@@ -988,6 +1015,9 @@
           
         </div>
       </a>
+   
+
+
       <nav>
         <a href="/">
           <span>Home</span>
@@ -998,15 +1028,11 @@
         <a href="#city-banner">
           <span>Contact</span>
         </a>
-        <!-- <a href="#services">
-          <span>Services</span>
-        </a> -->
-        <!-- <a href="#announcements">
-          <span>Announcements</span>
-        </a> -->
-        
+
       </nav>
     </div>
+
+
   </header>
 
 
@@ -1049,18 +1075,6 @@
     </div>
   </section>
 
-    <!-- ══════════════════════════════════════════════════════════════════
-       MODAL - DATA PRIVACY NOTICE
-  ══════════════════════════════════════════════════════════════════ -->
-<div id="floatingPopup" class="floatingPopup">
-  <h4>Data Privacy Consent Form</h4> <br>
-  <p>
-    I hereby give my consent and acknowledge the authority of Barangay San Juan I to process my personal
-    information in accordance with the Data Privacy Act of 2012.
-  </p> <br>
-  <button class="btn btn-primary" onclick="closePopup()" style="float:right;">Close</button>
-</div>
-</div>
 
 
   <!-- ══════════════════════════════════════════════════════════════════
@@ -1273,6 +1287,8 @@
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('nav a[href^="#"]');
     
+
+    
     window.addEventListener('scroll', () => {
       let current = '';
       sections.forEach(section => {
@@ -1294,11 +1310,13 @@
 
     function closePopup() {
     document.getElementById('floatingPopup').style.display = 'none';
+    document.body.style.overflow = 'auto'; // enable scroll
 }
 
 // Show popup on page load
-document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
     document.getElementById('floatingPopup').style.display = 'block';
+    document.body.style.overflow = 'hidden';
 });
   </script>
 
