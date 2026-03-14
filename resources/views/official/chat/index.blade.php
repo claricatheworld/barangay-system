@@ -29,7 +29,27 @@
 
     .thread-items {
         overflow-y: auto;
-        height: calc(100% - 50px);
+        height: calc(100% - 106px);
+    }
+
+    .thread-search {
+        padding: 10px 12px;
+        border-bottom: 1px solid #d9ecfb;
+        background: #f6fbff;
+    }
+
+    .thread-search input {
+        width: 100%;
+        border: 1px solid #c8e4f8;
+        border-radius: 10px;
+        padding: 9px 11px;
+        font-size: 13px;
+        font-family: inherit;
+    }
+
+    .thread-search input:focus {
+        outline: none;
+        border-color: #1a6fcc;
     }
 
     .thread-item {
@@ -180,16 +200,19 @@
 
 <div class="chat-layout">
     <section class="thread-list">
-        <div class="thread-header">Resident Conversations</div>
+        <div class="thread-header">Residents</div>
+        <div class="thread-search">
+            <input type="text" id="residentSearchInput" placeholder="Search resident by name...">
+        </div>
         <div class="thread-items" id="threadItems">
-            <div class="empty-note">No resident messages yet.</div>
+            <div class="empty-note">No residents available.</div>
         </div>
     </section>
 
     <section class="thread-panel">
-        <div class="thread-header" id="selectedThreadLabel">Select a conversation</div>
+        <div class="thread-header" id="selectedThreadLabel">Select a resident</div>
         <div class="messages-area" id="officialMessages">
-            <div class="empty-note">Choose a resident thread to start chatting.</div>
+            <div class="empty-note">Choose a resident to start chatting.</div>
         </div>
         <form class="chat-compose" id="officialChatForm">
             <label class="btn-icon" title="Upload image">📷
@@ -205,36 +228,56 @@
     (() => {
         const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
         const threadItems = document.getElementById('threadItems');
+        const residentSearchInput = document.getElementById('residentSearchInput');
         const selectedThreadLabel = document.getElementById('selectedThreadLabel');
         const messagesEl = document.getElementById('officialMessages');
         const form = document.getElementById('officialChatForm');
         const input = document.getElementById('officialChatInput');
         const imageInput = document.getElementById('officialChatImage');
 
-        let threads = [];
+        let residents = [];
+        let activeResidentId = null;
         let activeThreadId = null;
         let lastMessageId = 0;
+        let hasLoadedThread = false;
+        let residentSearchKeyword = '';
 
-        const renderThreads = () => {
-            if (!threads.length) {
-                threadItems.innerHTML = '<div class="empty-note">No resident messages yet.</div>';
+        const getFilteredResidents = () => {
+            if (!residentSearchKeyword) {
+                return residents;
+            }
+
+            return residents.filter((resident) =>
+                (resident.resident_name || '').toLowerCase().includes(residentSearchKeyword)
+            );
+        };
+
+        const renderResidents = () => {
+            const filteredResidents = getFilteredResidents();
+
+            if (!filteredResidents.length) {
+                threadItems.innerHTML = residentSearchKeyword
+                    ? '<div class="empty-note">No residents match your search.</div>'
+                    : '<div class="empty-note">No residents available.</div>';
                 return;
             }
 
             threadItems.innerHTML = '';
-            threads.forEach((thread) => {
+            filteredResidents.forEach((resident) => {
                 const item = document.createElement('div');
-                item.className = `thread-item ${thread.id === activeThreadId ? 'active' : ''}`;
+                item.className = `thread-item ${resident.id === activeResidentId ? 'active' : ''}`;
                 item.innerHTML = `
-                    <div class="thread-name">${thread.resident_name}</div>
-                    <div class="thread-preview">${thread.latest_preview ?? ''}</div>
-                    <div class="thread-time">${thread.last_message_at_human ?? ''}</div>
+                    <div class="thread-name">${resident.resident_name}</div>
+                    <div class="thread-preview">${resident.latest_preview ?? 'No messages yet'}</div>
+                    <div class="thread-time">${resident.last_message_at_human ?? ''}</div>
                 `;
                 item.addEventListener('click', async () => {
-                    activeThreadId = thread.id;
+                    activeResidentId = resident.id;
+                    activeThreadId = resident.thread_id || null;
                     lastMessageId = 0;
-                    renderThreads();
-                    await loadMessages();
+                    hasLoadedThread = false;
+                    renderResidents();
+                    await loadResidentThread();
                 });
                 threadItems.appendChild(item);
             });
@@ -276,37 +319,46 @@
             messagesEl.scrollTop = messagesEl.scrollHeight;
         };
 
-        const loadThreads = async () => {
-            const response = await fetch('{{ route('official.chat.threads') }}', {
+        const loadResidents = async () => {
+            const response = await fetch('{{ route('official.chat.residents') }}', {
                 headers: { 'Accept': 'application/json' },
             });
 
             if (!response.ok) return;
 
             const data = await response.json();
-            threads = data.threads || [];
+            residents = data.residents || [];
 
-            if (!activeThreadId && threads.length) {
-                activeThreadId = threads[0].id;
+            if (activeResidentId) {
+                const activeResident = residents.find((resident) => resident.id === activeResidentId);
+                activeThreadId = activeResident?.thread_id || activeThreadId;
             }
 
-            renderThreads();
+            if (!activeResidentId && residents.length) {
+                activeResidentId = residents[0].id;
+                activeThreadId = residents[0].thread_id || null;
+                hasLoadedThread = false;
+            }
 
-            if (activeThreadId) {
-                await loadMessages();
+            renderResidents();
+
+            if (activeResidentId && !hasLoadedThread) {
+                await loadResidentThread();
             }
         };
 
-        const loadMessages = async () => {
-            if (!activeThreadId) return;
+        const loadResidentThread = async () => {
+            if (!activeResidentId) return;
 
-            const response = await fetch(`/official/chat/threads/${activeThreadId}/messages?after_id=0`, {
+            const response = await fetch(`/official/chat/residents/${activeResidentId}/thread`, {
                 headers: { 'Accept': 'application/json' },
             });
 
             if (!response.ok) return;
 
             const data = await response.json();
+            activeThreadId = data.thread_id;
+            hasLoadedThread = true;
 
             selectedThreadLabel.textContent = data.resident_name || 'Resident Conversation';
             messagesEl.innerHTML = '';
@@ -339,11 +391,16 @@
 
             data.messages.forEach(appendMessage);
             scrollBottom();
-            await loadThreads();
+            await loadResidents();
         };
 
         const sendMessage = async () => {
-            if (!activeThreadId) return;
+            if (!activeResidentId) return;
+
+            if (!activeThreadId) {
+                await loadResidentThread();
+                if (!activeThreadId) return;
+            }
 
             const body = input.value.trim();
             const hasImage = imageInput.files.length > 0;
@@ -374,7 +431,7 @@
             scrollBottom();
             input.value = '';
             imageInput.value = '';
-            await loadThreads();
+            await loadResidents();
         };
 
         form.addEventListener('submit', async (event) => {
@@ -382,9 +439,14 @@
             await sendMessage();
         });
 
-        loadThreads();
+        residentSearchInput?.addEventListener('input', (event) => {
+            residentSearchKeyword = event.target.value.trim().toLowerCase();
+            renderResidents();
+        });
+
+        loadResidents();
         setInterval(pollMessages, 3000);
-        setInterval(loadThreads, 7000);
+        setInterval(loadResidents, 7000);
     })();
 </script>
 @endsection

@@ -68,8 +68,7 @@ class OfficialController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('first_name', 'like', "%{$search}%")
                     ->orWhere('middle_name', 'like', "%{$search}%")
-                    ->orWhere('surname', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('surname', 'like', "%{$search}%");
             });
         }
 

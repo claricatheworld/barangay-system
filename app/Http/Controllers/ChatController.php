@@ -16,6 +16,62 @@ class ChatController extends Controller
         return view('official.chat.index');
     }
 
+    public function officialResidents(): JsonResponse
+    {
+        $residents = User::query()
+            ->where('role', 'resident')
+            ->where('status', 'approved')
+            ->with([
+                'chatThread.latestMessage' => function ($query) {
+                    $query->with('sender:id,first_name,middle_name,surname,role');
+                },
+            ])
+            ->orderBy('surname')
+            ->orderBy('first_name')
+            ->get();
+
+        return response()->json([
+            'residents' => $residents->map(function (User $resident) {
+                $thread = $resident->chatThread;
+                $latest = $thread?->latestMessage;
+                $lastMessageAt = $thread?->last_message_at ?? $thread?->updated_at;
+
+                return [
+                    'id' => $resident->id,
+                    'resident_name' => $resident->getFullName(),
+                    'resident_email' => $resident->email,
+                    'thread_id' => $thread?->id,
+                    'last_message_at' => $lastMessageAt?->setTimezone('Asia/Manila')->toDateTimeString(),
+                    'last_message_at_human' => $lastMessageAt?->setTimezone('Asia/Manila')->format('M d, Y h:i A'),
+                    'latest_preview' => $latest?->body ?: ($latest?->image_path ? 'Image attachment' : 'No messages yet'),
+                ];
+            })->values(),
+        ]);
+    }
+
+    public function officialResidentThread(Request $request, User $resident): JsonResponse
+    {
+        if ($resident->role !== 'resident' || $resident->status !== 'approved') {
+            abort(404);
+        }
+
+        $thread = ChatThread::firstOrCreate(
+            ['resident_id' => $resident->id],
+            ['last_message_at' => now()]
+        );
+
+        $messages = $thread->messages()
+            ->with('sender:id,first_name,middle_name,surname,role')
+            ->limit(100)
+            ->get();
+
+        return response()->json([
+            'thread_id' => $thread->id,
+            'resident_name' => $resident->getFullName(),
+            'messages' => $messages->map(fn (ChatMessage $message) => $this->formatMessage($message, $request->user()->id)),
+        ]);
+    }
+
     public function residentThread(Request $request): JsonResponse
     {
         $resident = $request->user();

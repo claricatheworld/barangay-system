@@ -80,6 +80,8 @@ Route::middleware(['auth', 'official'])->prefix('official')->group(function () {
 
     // Chat
     Route::get('/chat', [ChatController::class, 'officialIndex'])->name('official.chat.index');
+    Route::get('/chat/residents', [ChatController::class, 'officialResidents'])->name('official.chat.residents');
+    Route::get('/chat/residents/{resident}/thread', [ChatController::class, 'officialResidentThread'])->name('official.chat.resident-thread');
     Route::get('/chat/threads', [ChatController::class, 'officialThreads'])->name('official.chat.threads');
     Route::get('/chat/threads/{thread}/messages', [ChatController::class, 'officialMessages'])->name('official.chat.messages');
     Route::post('/chat/threads/{thread}/messages', [ChatController::class, 'officialSend'])->name('official.chat.send');

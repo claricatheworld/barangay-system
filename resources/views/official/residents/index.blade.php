@@ -371,8 +371,9 @@
             <input 
                 type="text" 
                 name="search" 
+                id="residentNameSearch"
                 class="search-input" 
-                placeholder="Search by name or email..."
+                placeholder="Search by resident name..."
                 value="{{ request('search') }}"
             >
         </div>
@@ -402,7 +403,7 @@
             </thead>
             <tbody>
                 @foreach($residents as $resident)
-                    <tr>
+                    <tr data-resident-row data-resident-name="{{ strtolower($resident->getFullName()) }}">
                         <td>
                             <div class="resident-cell">
                                 <div class="avatar {{ $resident->status ?? 'pending' }}">
@@ -464,5 +465,30 @@
         <p>📭 No residents found</p>
     </div>
 @endif
+
+<script>
+    (() => {
+        const searchInput = document.getElementById('residentNameSearch');
+        const residentRows = Array.from(document.querySelectorAll('[data-resident-row]'));
+
+        if (!searchInput || residentRows.length === 0) {
+            return;
+        }
+
+        const applyResidentFilter = () => {
+            const keyword = searchInput.value.trim().toLowerCase();
+
+            residentRows.forEach((row) => {
+                const residentName = row.dataset.residentName || '';
+                row.style.display = residentName.includes(keyword) ? '' : 'none';
+            });
+        };
+
+        searchInput.addEventListener('input', applyResidentFilter);
+
+        // Apply once on page load so query string values are reflected immediately.
+        applyResidentFilter();
+    })();
+</script>
 
 @endsection

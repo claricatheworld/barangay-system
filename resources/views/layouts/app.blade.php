@@ -776,20 +776,6 @@
                  
                 <div class="topbar-right">
                     @auth
-                        @if(auth()->user()->role === 'resident')
-                            <button class="notif-btn" onclick="window.location.href='{{ route('resident.notifications') }}'">
-                                🔔
-                                @php
-                                    $unreadCount = App\Models\Notification::where('user_id', auth()->id())
-                                        ->where('is_read', false)
-                                        ->count();
-                                @endphp
-                                @if($unreadCount > 0)
-                                    <span class="notif-badge">{{ $unreadCount }}</span>
-                                @endif
-                            </button>
-                        @endif
-
                         <div class="topbar-user" onclick="toggleUserDropdown()">
                             <div class="topbar-user-avatar">
                                 @if($userPhotoUrl)
