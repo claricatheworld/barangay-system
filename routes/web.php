@@ -113,7 +113,7 @@ Route::middleware(['auth', 'official'])->prefix('official')->group(function () {
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     
-    // User approvals
+    // User Requests
     Route::get('/users', [AdminController::class, 'users'])->name('admin.users.index');
     Route::get('/users/{user}', [AdminController::class, 'showUser'])->name('admin.users.show');
     Route::post('/users/{user}/approve', [AdminController::class, 'approveUser'])->name('admin.users.approve');

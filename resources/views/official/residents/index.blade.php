@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Resident Management')
+@section('title', 'Residents')
 
 @section('content')
 @php
@@ -360,7 +360,7 @@
 </style>
 
 <div class="page-header">
-    <h1 class="page-title">Resident Management</h1>
+    <h1 class="page-title">Residents List</h1>
     <a href="{{ route($routePrefix . '.residents.create') }}" class="add-resident-btn">+ Add Resident</a>
 </div>
 

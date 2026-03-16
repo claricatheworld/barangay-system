@@ -18,7 +18,7 @@ class OfficialSeeder extends Seeder
             [
                 'first_name' => 'Juan',
                 'surname' => 'Dela Cruz',
-                'password' => Hash::make('Official@1234'),
+                'password' => Hash::make('@@Dfgh@1234@@'),
                 'role' => 'official',
                 'status' => 'approved',
             ]
